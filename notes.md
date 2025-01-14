@@ -23,4 +23,4 @@ As part of `Deliverable ⓵ Development deployment: JWT Pizza`, start up the app
 | Login as admin<br/>(a@jwt.com, pw: admin)           | login.tsx          | [PUT] /api/auth    | SELECT * FROM user WHERE email=? <br> SELECT * FROM userRole WHERE userId=? <br> INSERT INTO auth (token, userId) VALUES (?, ?)|
 | View Admin page                                     | adminDashboad.tsx  |                   |              |
 | Create a franchise for t@jwt.com                    | createFranchise.tsx| [POST]/api/franchise        | SELECT id, name FROM user WHERE email=? <br> INSERT INTO franchise (name) VALUES (?) <br> INSERT INTO userRole (userId, role, objectId) VALUES (?, ?, ?) <br> SELECT id, name FROM franchise |
-| Close the franchise for t@jwt.com                   |                    |                   |              |
+| Close the franchise for t@jwt.com                   | closeFranchise.tsx | [DELETE] /api/franchise/${franchise.id}   | SELECT u.id, u.name, u.email FROM userRole AS ur JOIN user AS u ON u.id=ur.userId WHERE ur.objectId=? AND ur.role='franchisee' <br>           | 
