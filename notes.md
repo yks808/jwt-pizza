@@ -16,9 +16,9 @@ As part of `Deliverable ⓵ Development deployment: JWT Pizza`, start up the app
 | Logout                                              | logout.tsx         |[DELETE] /api/auth | SELECT userId FROM auth WHERE token=? <br> DELETE FROM auth WHERE token=?|
 | View About page                                     | about.tsx          |  none             | none         |
 | View History page                                   | historty.tsx       |  none             | none         |
-| Login as franchisee<br/>(f@jwt.com, pw: franchisee) | login.tsx          | [PUT] /api/auth    | SELECT * FROM user WHERE email=? <br> SELECT * FROM userRole WHERE userId=? <br> INSERT INTO auth (token, userId) VALUES (?, ?)|
-| View franchise<br/>(as franchisee)                  |                    |                   |              |
-| Create a store                                      |                    |                   |              |
+| Login as franchisee<br/>(f@jwt.com, pw: franchisee) | login.tsx          | [PUT] /api/auth   | SELECT * FROM user WHERE email=? <br> SELECT * FROM userRole WHERE userId=? <br> INSERT INTO auth (token, userId) VALUES (?, ?)|
+| View franchise<br/>(as franchisee)                  |                    | [GET] /api/franchise/${user.id}  | SELECT objectId FROM userRole WHERE role='franchisee' AND userId=? <br> SELECT id, name FROM franchise WHERE id in (${franchiseIds.join(',')}) <br> `SELECT u.id, u.name, u.email FROM userRole AS ur JOIN user AS u ON u.id=ur.userId WHERE ur.objectId=? AND ur.role='franchisee'  |
+| Create a store                                      | createStore.tsx  <br><br>  franchiseDashboad.tsx | [POST] /api/franchise/${franchise.id}/store <br><br> [GET] /api/franchise/${user.id}| INSERT INTO store (franchiseId, name) VALUES (?, ?) <br><br> SELECT objectId FROM userRole WHERE role='franchisee' AND userId=? <br> SELECT id, name FROM franchise WHERE id in (${franchiseIds.join(',')}) <br> SELECT u.id, u.name, u.email FROM userRole AS ur JOIN user AS u ON u.id=ur.userId WHERE ur.objectId=? AND ur.role='franchisee'|
 | Close a store                                       |                    |                   |              |
 | Login as admin<br/>(a@jwt.com, pw: admin)           | login.tsx          | [PUT] /api/auth    | SELECT * FROM user WHERE email=? <br> SELECT * FROM userRole WHERE userId=?|
 | View Admin page                                     |                    |                   |              |
