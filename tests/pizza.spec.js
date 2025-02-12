@@ -283,7 +283,7 @@ test('check if footer tab works', async ({ page }) => {
 
   });
 
-  test('test docs', async ({ page }) => {
+test('test docs', async ({ page }) => {
 await page.goto('http://localhost:5173/docs');
 await expect(page.getByRole('list')).toContainText('docs');
 await expect(page.getByRole('main')).toContainText('JWT Pizza API');
@@ -303,3 +303,44 @@ await expect(page.getByRole('main')).toContainText('🔐 [POST] /api/franchise')
 await expect(page.getByRole('main')).toContainText('service: http://localhost:3000');
 await expect(page.getByRole('main')).toContainText('https://pizza-factory.cs329.click');
   });
+
+test('login and logout with mock data', async ({ page }) => {
+  await page.route('**/api/login', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true,
+        user: {
+          id: '123',
+          email: 'fake@fake.com',
+          name: 'Test User'
+        },
+        token: 'fake-jwt-token'
+      })
+    });
+  });
+
+  await page.route('**/api/logout', async route => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        success: true
+      })
+    });
+  });
+
+  await page.goto('http://localhost:5173/');
+  await page.getByRole('link', { name: 'Login' }).click();
+  
+  await page.getByRole('textbox', { name: 'Email address' }).fill('fake@fake.com');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('fake');
+
+  await page.getByRole('button', { name: 'Login' }).click();
+  
+  await page.getByRole('link', { name: 'Logout' }).click();
+
+  await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+});
