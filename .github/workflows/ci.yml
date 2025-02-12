@@ -24,15 +24,14 @@ jobs:
       - name: Set version
         id: set_version
         run: |
-          version=$(date +'%Y%m%d.%H%M%S')  
-          echo "version=$version" >> "$GITHUB_OUTPUT"  
+          version=$(date +'%Y%m%d.%H%M%S')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           printf '{"version": "%s" }' "$version" > public/version.json
 
       - name: Run tests
         run: |
           npx playwright install --with-deps chromium
           npm run test:coverage
-          - name: Update coverage
 
       - name: Update coverage
         run: |
@@ -42,7 +41,7 @@ jobs:
 
       - name: Build
         run: |
-          npm ci && npm run build  
+          npm ci && npm run build
           cp dist/index.html dist/404.html
 
       - name: Update pages artifact
