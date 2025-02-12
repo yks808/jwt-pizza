@@ -280,5 +280,26 @@ test('check if footer tab works', async ({ page }) => {
     await page.getByRole('textbox', { name: 'franchisee admin email' }).fill('notfake@jwt.com');
     await expect(page.locator('form')).toContainText('Create');
     await page.getByRole('button', { name: 'Create' }).click();
+
   });
 
+  test('test docs', async ({ page }) => {
+await page.goto('http://localhost:5173/docs');
+await expect(page.getByRole('list')).toContainText('docs');
+await expect(page.getByRole('main')).toContainText('JWT Pizza API');
+await expect(page.getByRole('main')).toContainText('[POST] /api/auth');
+await expect(page.getByRole('main')).toContainText('Response');
+await expect(page.getByRole('main')).toContainText('[PUT] /api/auth');
+await expect(page.getByRole('main')).toContainText('🔐 [PUT] /api/auth/:userId');
+await page.getByRole('heading', { name: '🔐 [DELETE] /api/auth' }).click();
+await expect(page.getByRole('main')).toContainText('🔐 [DELETE] /api/auth');
+await expect(page.getByRole('main')).toContainText('[GET] /api/order/menu');
+await expect(page.getByRole('main')).toContainText('🔐 [PUT] /api/order/menu');
+await expect(page.getByRole('main')).toContainText('🔐 [GET] /api/order');
+await expect(page.getByRole('main')).toContainText('🔐 [POST] /api/order');
+await expect(page.getByRole('main')).toContainText('[GET] /api/franchise');
+await expect(page.getByRole('main')).toContainText('🔐 [GET] /api/franchise/:userId');
+await expect(page.getByRole('main')).toContainText('🔐 [POST] /api/franchise');
+await expect(page.getByRole('main')).toContainText('service: http://localhost:3000');
+await expect(page.getByRole('main')).toContainText('https://pizza-factory.cs329.click');
+  });
