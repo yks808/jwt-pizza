@@ -2,6 +2,8 @@
 
 # adding status badge
 
+![Coverage badge](https://badge.cs329.click/badge/yks808/jwtpizzacoverage)
+
 [![CI Pipeline](https://github.com/yks808/jwt-pizza/actions/workflows/ci.yml/badge.svg)](https://github.com/yks808/jwt-pizza/actions/workflows/ci.yml)
 
 ![Coverage badge](coverageBadge.svg)
