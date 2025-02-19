@@ -1,4 +1,5 @@
 name: CI Pipeline
+
 on:
   push:
     branches:
@@ -20,7 +21,7 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: Set version
+      - name: set version
         id: set_version
         run: |
           version=$(date +'%Y%m%d.%H%M%S')
@@ -29,24 +30,43 @@ jobs:
 
       - name: Build
         run: |
-          npm ci && npm run buildg
-
-      - name: Run tests
-        run: |
-          npx playwright install --with-deps chromium
-          npm run test:coverage
-
-      - name: Update coverage
-        run: |
-          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
-          color=$(echo "$coverage < 80" | bc -l | awk '{if ($1) print "red"; else print "green"}')
-          curl -s -X POST "https://badge.cs329.click/badge/${{ github.repository_owner }}/jwtpizzacoverage?label=Coverage&value=$coverage%25&color=$color" -H "authorization: bearer ${{ secrets.FACTORY_API_KEY }}" -o /dev/null
+          npm ci && npm run build
 
       - name: Update dist artifact
         uses: actions/upload-artifact@v4
         with:
           name: package
           path: dist/
+
+  test:
+    name: Run Tests and Update Coverage
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+
+      - name: Update coverage badge
+        run: |
+          coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          color=$(echo "$coverage < 80" | bc -l | awk '{if ($1) print "red"; else print "green"}')
+          curl -s -X POST "https://badge.cs329.click/badge/${{ github.repository_owner }}/jwtpizzacoverage?label=Coverage&value=$coverage%25&color=$color" \
+            -H "authorization: bearer ${{ secrets.FACTORY_API_KEY }}" -o /dev/null
+
   deploy:
     needs: build
     permissions:
